@@ -1,13 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flappy Indomie</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Menu Start -->
+  <div id="menuScreen" class="screen">
+    <h1>🍜 Flappy Indomie 🍜</h1>
+    <button id="startBtn">Start</button>
+  </div>
+
+  <!-- Canvas game -->
   <canvas id="gameCanvas"></canvas>
-  <button id="restartBtn" style="display:none;">Play Again</button>
+
+  <!-- Game Over -->
+  <div id="gameOverScreen" class="screen" style="display:none;">
+    <h2>Game Over!</h2>
+    <p id="finalScore"></p>
+    <button id="restartBtn2">Play Again</button>
+  </div>
+
+  <!-- Nút restart cũ (ẩn đi) -->
+  <button id="restartBtn" style="display:none;">Restart</button>
+
   <script src="game.js"></script>
 </body>
 </html>

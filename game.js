@@ -3,8 +3,13 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
-canvas.width = 400;
-canvas.height = 600;
+// Responsive canvas
+function resizeCanvas() {
+  canvas.width = window.innerWidth * 0.9;
+  canvas.height = window.innerHeight * 0.9;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 // ---- Hình ảnh
 const goiMi = new Image();
@@ -19,10 +24,15 @@ diaMi.src = "images/plate.png";
 const background = new Image();
 background.src = "images/background.png";
 
-const NUT_CHOI_LAI = document.getElementById("restartBtn");
-NUT_CHOI_LAI.textContent = "Chơi lại";
-NUT_CHOI_LAI.style.backgroundColor = "#FFD700";
-NUT_CHOI_LAI.style.color = "#ffffff";
+// ---- UI Elements
+const NUT_CHOI_LAI = document.getElementById("restartBtn"); // ẩn
+const MENU = document.getElementById("menuScreen");
+const GAMEOVER = document.getElementById("gameOverScreen");
+const START_BTN = document.getElementById("startBtn");
+const RESTART_BTN2 = document.getElementById("restartBtn2");
+const FINAL_SCORE = document.getElementById("finalScore");
+
+NUT_CHOI_LAI.style.display = "none";
 
 // ---- Âm thanh
 const nhacNen = new Audio("sounds/bgm.mp3");
@@ -31,6 +41,9 @@ nhacNen.volume = 0.4;
 
 const amThanhFlap = new Audio("sounds/flap.wav");
 amThanhFlap.volume = 0.6;
+
+const amThanhGameOver = new Audio("sounds/gameover.wav"); // <-- thêm mới
+amThanhGameOver.volume = 0.7;
 
 // ---- Tham số game
 const TOC_DO_COT = 2.2;
@@ -64,13 +77,24 @@ function bamPhimHoacChuot() {
 document.addEventListener("keydown", bamPhimHoacChuot);
 document.addEventListener("click", bamPhimHoacChuot);
 
-NUT_CHOI_LAI.addEventListener("click", () => location.reload());
+// ---- Nút menu/start/restart
+START_BTN.addEventListener("click", () => {
+  MENU.style.display = "none";
+  batDauGame();
+});
+RESTART_BTN2.addEventListener("click", () => {
+  GAMEOVER.style.display = "none";
+  batDauGame();
+});
 
 // Chờ ảnh load xong
 [goiMi, doiDua, diaMi, background].forEach(img => {
   img.onload = () => {
     hinhDaTai++;
-    if (hinhDaTai === 4) batDauGame();
+    if (hinhDaTai === 4) {
+      // hiện menu đầu tiên
+      MENU.style.display = "flex";
+    }
   };
 });
 
@@ -189,10 +213,16 @@ function ve(nvW, nvH) {
 function ketThucGame() {
   if (thua) return;
   thua = true;
-  NUT_CHOI_LAI.style.display = "block";
 
   nhacNen.pause();
   nhacNen.currentTime = 0;
+
+  // phát âm thanh game over
+  amThanhGameOver.currentTime = 0;
+  amThanhGameOver.play();
+
+  FINAL_SCORE.textContent = "Điểm: " + diem;
+  GAMEOVER.style.display = "flex";
 }
 
 // ---- Vòng lặp
@@ -214,7 +244,7 @@ function batDauGame() {
   cot = [];
   items = [];
   thua = false;
-  NUT_CHOI_LAI.style.display = "none";
+  GAMEOVER.style.display = "none";
 
   requestAnimationFrame(vongLap);
 }
